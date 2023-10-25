@@ -30,13 +30,23 @@ def main():
             print("1. Intraday\n2. Daily\n3. Weekly\n4. Monthly\n")
             answer = int(input("Enter the time series option (1, 2, 3, 4): "))
 
-            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol=IBM&interval={}&apikey=9I22O100RNSZ6IPR'.format(get_time_series(answer))
+            if answer > 4 or answer < 0:
+
+                print("Invalid input. Please enter a number between 1 and 4.")
+                input()
+                continue
+
+            values = get_time_series(answer)
+
+            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol=IBM&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], values[1])
 
             response = requests.get(url)
             jprint(response.json())
 
             run_again = input("Would you like to view more stock data? Press 'y' to continue: ")
+
             if run_again.lower() != 'y':
+
                 break
 
         except:
