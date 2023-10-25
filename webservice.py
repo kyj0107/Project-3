@@ -21,8 +21,6 @@ def get_time_series(number):
 
 def main():
 
-    url = ""
-
     while True:
 
         try:
