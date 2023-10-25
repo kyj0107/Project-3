@@ -1,25 +1,17 @@
-# This is mostly to refresh on Git commands, but it could also be a starting point.
+import requests
+import json
 
-def get_chart():
-    while True:
-        chart_type = ''
-        try: 
-            print("\nChart Types\n---------------\n 1. Bar \n 2. Line\n")
-            chart = input("Enter the chart type you want (1,2): ")
-            if chart == "1":
-                chart_type = 'Bar'
-                break
-            elif chart == "2":
-                chart_type = 'Line'
-                break
-            else:
-                print("Invalid Chart Type! Try Again!")
-        except Exception as error:
-            print("Invalid Chart Type! Try Again!")
-    return chart_type
+print("Stock Data Visualizer\n")
 
-def main():
+symbol = input("Enter the stock symbol you are looking for: ")
 
-    print("How about here we print out all the text, and then run the functions?")
+query = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=" + symbol + "&interval=5min&apikey=ZMES1H6BDGAXBBSH"
 
-main()
+response = requests.get(query)
+
+def jprint(obj):
+    # create a formatted string of the Python JSON object
+    text = json.dumps(obj, sort_keys=True, indent=4)
+    print(text)
+
+jprint(response.json())
