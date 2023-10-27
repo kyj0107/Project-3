@@ -40,6 +40,10 @@ def get_time_series(number):
     else:
         return ['MONTHLY', 'null']
     
+def get_symbol():
+    symbol = input("Enter the stock symbol you are looking for: ")
+    return symbol
+    
 start_date = input("Enter the beginning date in YYYY-MM-DD format: ")
 end_date = input("Enter the end date in YYYY-MM-DD format: ")
 # Validate the dates
@@ -73,7 +77,9 @@ def main():
 
             values = get_time_series(answer)
 
-            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol=IBM&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], values[1])
+            symbol = get_symbol()
+
+            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol={}&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], symbol, values[1])
 
             response = requests.get(url)
             jprint(response.json())
