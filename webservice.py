@@ -29,64 +29,34 @@ def jprint(obj):
     text = json.dumps(obj, sort_keys=True, indent=4)
     print(text)
 
-def get_time_series():
+def get_time_series(number):
 
-    print("\nSelect the Time Series of the chart you want to Generate")
-    print("--------------------------------------------------------")
-    print("1. Intraday\n2. Daily\n3. Weekly\n4. Monthly\n")
-    number = int(input("Enter the time series option (1, 2, 3, 4): "))
-
-    time_series = []
-
-    while True:
-
-        try:
-
-            if number == 1:
-                time_series = ['INTRADAY', '60min']
-                break
-            elif number == 2:
-                time_series = ['DAILY', 'null']
-                break
-            elif number == 3:
-                time_series = ['WEEKLY', 'null']
-                break
-            elif number == 4:
-                time_series = ['MONTHLY', 'null']
-                break
-            else:
-                print("Invalid input. Please enter a number between 1 and 4.")
-                continue
-
-        except:
-
-            print("Invalid input. Try again.")
-            continue
-
-    return time_series
+    if number == 1:
+        return ['INTRADAY', '60min']
+    elif number == 2:
+        return ['DAILY', 'null']
+    elif number == 3:
+        return ['WEEKLY', 'null']
+    else:
+        return ['MONTHLY', 'null']
     
-def get_dates():
+def get_symbol():
+    symbol = input("Enter the stock symbol you are looking for: ")
+    return symbol
     
-    start_date = input("Enter the beginning date in YYYY-MM-DD format: ")
-    end_date = input("Enter the end date in YYYY-MM-DD format: ")
-    # Validate the dates
-    while True:
+start_date = input("Enter the beginning date in YYYY-MM-DD format: ")
+end_date = input("Enter the end date in YYYY-MM-DD format: ")
+# Validate the dates
+try:
+    start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
+    end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
+except ValueError:
+    print("Invalid date format. Please use YYYY-MM-DD.")
+    exit()
 
-        try:
-
-            start_date_obj = datetime.strptime(start_date, '%Y-%m-%d')
-            end_date_obj = datetime.strptime(end_date, '%Y-%m-%d')
-
-            if end_date_obj < start_date_obj:
-
-                print("End date cannot be before the start date.")
-                continue
-
-            break
-        except ValueError:
-
-            print("Invalid date format. Please use YYYY-MM-DD.")
-            continue
+if end_date_obj < start_date_obj:
+    print("End date cannot be before the start date.")
+    exit()
 
 def main():
 
@@ -98,9 +68,18 @@ def main():
             print("--------------------------------------------------------")
             print("1. Intraday\n2. Daily\n3. Weekly\n4. Monthly\n")
             answer = int(input("Enter the time series option (1, 2, 3, 4): "))
+
+            if answer > 4 or answer < 0:
+
+                print("Invalid input. Please enter a number between 1 and 4.")
+                input()
+                continue
+
             values = get_time_series(answer)
 
-            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol=IBM&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], values[1])
+            symbol = get_symbol()
+
+            url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol={}&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], symbol, values[1])
 
             response = requests.get(url)
             jprint(response.json())
