@@ -99,9 +99,40 @@ def main():
             symbol = get_symbol()
             chart_type = get_chart()
             values = get_time_series()
-            get_dates()
+            start_end = get_dates()
 
             url = 'https://www.alphavantage.co/query?function=TIME_SERIES_{}&symbol={}&interval={}&apikey=9I22O100RNSZ6IPR'.format(values[0], symbol, values[1])
+
+            response = requests.get(url)
+            data = json.loads(response.text)
+
+            i = 0
+
+            key = ""
+
+            for item in data:
+
+                if i == 1:
+                    key = item
+                i += 1
+
+            dates = []
+
+            for item in data[key]:
+
+                dates.append(item)
+
+            for x in dates:
+
+                x_time_obj = datetime.strptime(x, '%Y-%m-%d')
+
+                if x_time_obj >= start_end[0] and x_time_obj <= start_end[1]:
+                
+                    print("\n{}:\n".format(x))
+                    
+                    for item in data[key][x]:
+
+                        print("\t{}: {}".format(item, data[key][x][item]))
 
             run_again = input("Would you like to view more stock data? Press 'y' to continue: ")
 
@@ -115,34 +146,3 @@ def main():
             continue
 
 main()
-
-
-# def main():
-
-#     start_and_end = get_dates()
-
-#     f = open('stocks.json')
-
-#     data = json.load(f)
-
-#     dates = []
-
-#     for item in data['Monthly Time Series']:
-
-#         dates.append(item)
-
-#     for x in dates:
-
-#         x_time_obj = datetime.strptime(x, '%Y-%m-%d')
-
-#         if x_time_obj >= start_and_end[0] and x_time_obj <= start_and_end[1]:
-        
-#             print("\n{}:\n".format(x))
-            
-#             for item in data['Monthly Time Series'][x]:
-
-#                 print("\t{}: {}".format(item, data['Monthly Time Series'][x][item]))
-                      
-#     f.close()
-
-# main()
