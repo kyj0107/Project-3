@@ -1,4 +1,3 @@
-# This is mostly to refresh on Git commands, but it could also be a starting point.
 import requests
 import json
 import pygal
@@ -163,6 +162,7 @@ def main():
                 bar_chart.add('low', low_values)
                 bar_chart.add('close', close_values)
                 bar_chart.render_to_file('bar_chart.svg')
+                webbrowser.open('bar_chart.svg')
             
             elif chart_type == 2:
 
@@ -174,6 +174,7 @@ def main():
                 line_chart.add('low', low_values)
                 line_chart.add('close', close_values)
                 line_chart.render_to_file('line_chart.svg')
+                webbrowser.open('line_chart.svg')
 
             run_again = input("Would you like to view more stock data? Press 'y' to continue: ")
 
