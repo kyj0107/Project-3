@@ -3,6 +3,7 @@ import requests
 import json
 import pygal
 from datetime import datetime
+import lxml
 import webbrowser
 
 def get_symbol():
@@ -122,17 +123,57 @@ def main():
 
                 dates.append(item)
 
+            usable_dates = []
+            open_values = []
+            high_values = []
+            low_values = []
+            close_values = []
+
             for x in dates:
 
                 x_time_obj = datetime.strptime(x, '%Y-%m-%d')
 
                 if x_time_obj >= start_end[0] and x_time_obj <= start_end[1]:
-                
-                    print("\n{}:\n".format(x))
                     
                     for item in data[key][x]:
 
-                        print("\t{}: {}".format(item, data[key][x][item]))
+                        if 'open' in item:
+
+                            open_values.append(float(data[key][x][item]))
+
+                        elif 'high' in item:
+
+                            high_values.append(float(data[key][x][item]))
+
+                        elif 'low' in item:
+
+                            low_values.append(float(data[key][x][item]))
+
+                        elif 'close' in item:
+
+                            close_values.append(float(data[key][x][item]))
+
+            if chart_type == 1:
+
+                bar_chart = pygal.Bar()
+                bar_chart.title = 'Stock Data for IBM: {} to {}'.format(str(start_end[0]), str(start_end[1]))
+                bar_chart.x_labels = [x for x in usable_dates]
+                bar_chart.add('open', open_values)
+                bar_chart.add('high', high_values)
+                bar_chart.add('low', low_values)
+                bar_chart.add('close', close_values)
+                bar_chart.render_to_file('bar_chart.svg')
+            
+            elif chart_type == 2:
+
+                line_chart = pygal.HorizontalLine()
+                line_chart.title = 'Stock Data for IBM: {} to {}'.format(str(start_end[0]), str(start_end[1]))
+                line_chart.x_labels = [x for x in usable_dates]
+                line_chart.add('open', open_values)
+                line_chart.add('high', high_values)
+                line_chart.add('low', low_values)
+                line_chart.add('close', close_values)
+                line_chart.render_to_file('line_chart.svg')
 
             run_again = input("Would you like to view more stock data? Press 'y' to continue: ")
 
