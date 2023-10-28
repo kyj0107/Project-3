@@ -88,6 +88,8 @@ def get_dates():
             print("Invalid date format. Please use YYYY-MM-DD.")
             continue
 
+    return [start_date_obj, end_date_obj]
+
 def main():
 
     while True:
@@ -113,3 +115,34 @@ def main():
             continue
 
 main()
+
+
+# def main():
+
+#     start_and_end = get_dates()
+
+#     f = open('stocks.json')
+
+#     data = json.load(f)
+
+#     dates = []
+
+#     for item in data['Monthly Time Series']:
+
+#         dates.append(item)
+
+#     for x in dates:
+
+#         x_time_obj = datetime.strptime(x, '%Y-%m-%d')
+
+#         if x_time_obj >= start_and_end[0] and x_time_obj <= start_and_end[1]:
+        
+#             print("\n{}:\n".format(x))
+            
+#             for item in data['Monthly Time Series'][x]:
+
+#                 print("\t{}: {}".format(item, data['Monthly Time Series'][x][item]))
+                      
+#     f.close()
+
+# main()
